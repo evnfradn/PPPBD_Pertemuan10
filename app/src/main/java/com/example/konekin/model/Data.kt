@@ -14,3 +14,4 @@ data class Data(
     @SerializedName("profile_image")
     val profileImage: String
 )
+

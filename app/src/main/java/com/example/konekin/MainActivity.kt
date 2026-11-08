@@ -1,5 +1,6 @@
 package com.example.konekin
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
 
         response.enqueue(object : Callback<Users> {
             override fun onResponse(call: Call<Users>, response: Response<Users>) {
-                for (i in response.body()!!.data) {
+                val listData = response.body()!!.data
+                for (i in listData) {
                     userList.add(i.employeeName)
                 }
                 val listAdapter = ArrayAdapter(
@@ -34,6 +36,15 @@ class MainActivity : AppCompatActivity() {
                     userList
                 )
                 binding.lvNama.adapter = listAdapter
+
+                binding.lvNama.setOnItemClickListener { _, _, position, _ ->
+                    val user = listData[position]
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                    intent.putExtra("name", user.employeeName)
+                    intent.putExtra("salary", user.employeeSalary)
+                    intent.putExtra("age", user.employeeAge)
+                    startActivity(intent)
+                }
             }
 
             override fun onFailure(call: Call<Users>, t: Throwable) {
